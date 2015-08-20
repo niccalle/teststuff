@@ -1,0 +1,22 @@
+<div class="container">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h1>Quiz {{quizName}}</h1>
+		</div>
+		<div class="panel-body">
+			Quiz Homepage Stuff!
+			<br>
+			<br>
+			{{#each questions as |qstn qstnId|}}
+				<div class="panel-body">
+					<h2>{{qstn.name}}</h2>
+					<ul>
+					{{#each qstn.answers as |ans ansId|}}
+						<li>{{ans}}</li>
+					{{/each}}
+					</ul>
+				</div>
+			{{/each}}
+		</div>
+	</div>
+</div>
