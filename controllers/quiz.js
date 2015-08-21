@@ -14,6 +14,8 @@ module.exports = {
 		})
 	},
 	sendQuiz: function(req,res){
-		res.redirect('/');
+		console.log("recieved a post request!");
+		console.log(req.body);
+		res.send('gj nerd');
 	}
 }
