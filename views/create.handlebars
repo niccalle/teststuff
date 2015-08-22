@@ -1,0 +1,99 @@
+<div class="container">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h1>Quiz Creation Page</h1>
+		</div>
+		<div class="panel-body">
+		<form method="post" action="/create">
+		<div class="row">
+		<div class="col-md-6">
+			<div class="input-group input-group-lg">
+				<input type="text" class = "form-control" placeholder="Quiz Name" id="QuizName">
+			</div>
+		</div>
+		</div>
+		
+		<div class="panel panel-default" name="fullQuestion">
+			<div class="panel-body">
+			<input type="text" class = "form-control" placeholder="Question Name" id="QuestionName0">
+			    <div class="input-group" name="answer">
+			      <span class="input-group-addon">
+			        <input type="radio" name="Question0" aria-label="...">
+			      </span>
+			      <input type="text" class="form-control" placeholder="Answer" aria-label="...">
+			    </div><!-- /input-group -->
+			    <div class="input-group" name="answer">
+			      <span class="input-group-addon">
+			        <input type="radio" name="Question0" aria-label="...">
+			      </span>
+			      <input type="text" class="form-control" placeholder="Answer" aria-label="...">
+			    </div><!-- /input-group -->
+			    <div class="input-group" name="answer">
+			      <span class="input-group-addon">
+			        <input type="radio" name="Question0" aria-label="...">
+			      </span>
+			      <input type="text" class="form-control" placeholder="Answer" aria-label="...">
+			    </div><!-- /input-group -->
+			    <button class="btn btn-default answer" type="button" name="addAnswer">Add Answer</button>
+			  </div>
+		</div>
+		<button class="btn btn-default" name="addQuestion" type="button"> Add Question</button>
+		</div>
+		<button class="btn btn-default" type="submit" name="submitQuiz">Submit Quiz</button>
+		</form>
+		</div>
+	</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		var counter = 0; //this will be a counter for how many questions there are
+		$(this).on('click','.answer',function(event){
+			event.preventDefault();
+			console.log("clicked something");
+			$answer = $('.input-group[name="answer"]:first').clone();
+			$answer.children().last().val("");
+			$(this).before($answer);
+		});
+		$('button[name="addQuestion"]').on('click',function(event){
+			counter +=1;
+			$question = $('.panel[name="fullQuestion"]:first').clone();
+			$inputs = $question.find('input');
+			$inputs.each(function(){
+				$(this).val("");
+			})
+			$radios = $question.find('input[type="radio"]');
+			$radios.each(function(){
+				var radioName = "Question"+counter;
+				$(this).attr("name",radioName);
+			})
+			$(this).before($question);
+		})
+		$('button[name="submitQuiz"]').click(function(event){
+			event.preventDefault();
+			console.log("Button pressed");
+			var data = {
+				quizName : $("#QuizName").val()
+			}
+			questions = [];
+			$questions = $('.panel[name="fullQuestion"]');
+			$questions.each(function(){
+				questionData = {
+					name : "",
+					answers : [],
+					correct : ""
+				}
+				questionData.name = $(this).find("input[placeholder='Question Name']").val();
+				$(this).find("input[placeholder='Answer']").each(function(){
+					questionData.answers.push($(this).val());
+				});
+				questionData.correct = $(this).find("input[type='radio']:checked").parent().next().val();
+				questions.push(questionData);
+			})
+			data.questions = JSON.stringify(questions);
+			$.post('/create',data,function(data){
+				document.location.href='/quiz/'+data;
+			})
+		})
+	})
+</script>

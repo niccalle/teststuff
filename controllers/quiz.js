@@ -40,7 +40,7 @@ module.exports = {
 				console.log(qz.questions.length);
 				for (var i = 0; i < qz.questions.length; i+=1){
 					if(qz.questions[i].name == answers[counter].question){
-						if(qz.questions[i].correct == (answers[counter].ans+1)){
+						if(qz.questions[i].correct == qz.questions[i].answers[answers[counter].ans]){
 							howMany+=1;
 						}
 					}

@@ -4,6 +4,6 @@ var mongoose = require('mongoose'),
 var Questions = new Schema({
 	name : {type : String},
 	answers : [{type : String}],
-	correct : {type: Number}
+	correct : {type: String}
 });
 module.exports = Questions;

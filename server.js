@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var app = express();
 app = config.initialize(app);
 app.listen(3000);
-mongoose.connect('mongodb://localhost:27017');
+mongoose.connect('mongodb://localhost/quizApp');
 mongoose.connection.on('open', function(){
 	console.log('Mongoose connected');
 })
