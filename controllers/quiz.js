@@ -1,4 +1,5 @@
 var questions = require('../helpers/questions');
+var Quiz = require('../models/quiz');
 module.exports = {
 	index: function(req,res){
 		res.render('index');
@@ -6,16 +7,47 @@ module.exports = {
 	getQuiz: function(req,res){
 		var str = "<b> Quiz #: </b>" + req.params.id;
 		quizModel = {
-			'quizId' : req.params.id,
-			'quizName' : "Temporary Quiz" 
+			'quizId' : "",
+			'quizName' : ""
 		};
-		questions(quizModel,function(model){
-			res.render('quiz',model);
-		})
+		Quiz.findOne({'quizId' : req.params.id}, function(err,qz){
+			if(err){throw err};
+			if(qz){
+				console.log("Found quiz!");
+				quizModel.quizId = qz.quizId;
+				quizModel.quizName = qz.quizName;
+				quizModel.questions = qz.questions;
+				questions.initialize(quizModel,function(model){
+					res.render('quiz',model);
+				})
+			}
+		});
+		// questions.initialize(quizModel,function(model){
+		// 	res.render('quiz',model);
+		// })
 	},
 	sendQuiz: function(req,res){
 		console.log("recieved a post request!");
-		console.log(req.body);
-		res.send('gj nerd');
-	}
+		var answers = JSON.parse(req.body.formAnswers);
+		console.log(answers);
+		Quiz.findOne({'quizId' : req.body.quizId}, function(err,qz){
+			if(err) {throw err};
+			if(qz){
+				console.log("found one");
+				var counter = 0;
+				console.log(qz.questions);
+				var howMany = 0;
+				console.log(qz.questions.length);
+				for (var i = 0; i < qz.questions.length; i+=1){
+					if(qz.questions[i].name == answers[counter].question){
+						if(qz.questions[i].correct == (answers[counter].ans+1)){
+							howMany+=1;
+						}
+					}
+				counter+=1;
+				}
+				res.send(JSON.stringify(howMany));
+			}
+		})
+}
 }
