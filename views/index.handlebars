@@ -7,6 +7,17 @@
 			Quiz Homepage Stuff!
 			<br>
 			<br>
+
+			<h1>
+				Recent Quizzes
+			</h1>
+			<ul>
+				{{#each quizzes as |quiz quizNum|}}
+					<li>
+						{{quiz.quizName}}
+					</li>
+				{{/each}}
+			</ul>
 		</div>
 	</div>
 </div>

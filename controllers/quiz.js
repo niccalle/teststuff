@@ -1,8 +1,29 @@
 var questions = require('../helpers/questions');
 var Quiz = require('../models/quiz');
 module.exports = {
+
 	index: function(req,res){
-		res.render('index');
+		function quizModel(id, name){
+		this.quizId = id;
+		this.quizName = name;
+		}
+		var quizzes = [];
+		var callback = function(err,qzs){
+			if (err){throw err};
+			if (qzs){
+				qzs.forEach(function(element, index, array){
+					var qzm = new quizModel(element.quizId,element.quizName);
+					quizzes.push(qzm);					
+				})
+				console.log(quizzes);
+
+			}
+			var model = {
+				quizzes : quizzes
+			};
+			res.render('index',model);
+		}
+		Quiz.find({},"quizId quizName").limit(5).exec(callback)
 	},
 	getQuiz: function(req,res){
 		var str = "<b> Quiz #: </b>" + req.params.id;
